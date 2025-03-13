@@ -1,0 +1,115 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        text-align: center;
+        margin: 40px;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    table {
+        width: 80%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+</style>
+<body>
+<h2>Admin - Approve Users</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="userTableBody">
+    <!-- Users will be dynamically loaded here -->
+    </tbody>
+</table>
+<script >
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchPendingUsers();
+    });
+
+    // Function to fetch pending users from API
+    function fetchPendingUsers() {
+        fetch("http://localhost:8080/api/pendingUsers")
+
+            .then(response => response.json())
+            .then(users => {
+                const tableBody = document.getElementById("userTableBody");
+                tableBody.innerHTML = ""; // Clear table before adding new data
+
+                users.forEach(user => {
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>
+                            <button onclick="approveUser(${user.id})">Approve</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Error fetching users:", error));
+    }
+    function approveUser(userId) {
+        fetch("http://localhost:8080/api/approve?userId=" + userId, {
+            method: "POST"
+        })
+        .then(response => response.text())
+        .then(message => {
+            alert(message); // Show success message
+            fetchPendingUsers(); // Refresh user list
+        })
+        .catch(error => console.error("Error approving user:", error));
+    }
+</script>
+</body>
+</html>

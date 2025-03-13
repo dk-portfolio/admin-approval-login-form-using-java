@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .register-container {
+        background: white;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        width: 350px;
+        text-align: center;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    label {
+        display: block;
+        text-align: left;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 90%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    button {
+        margin-top: 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 14px;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    #message {
+        margin-top: 10px;
+        color: red;
+        font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<form id="form-container">
+  <h2>User Registration</h2>
+  <label>Username:</label>
+  <input type="text" name="userName" id="username" required><br>
+  <label>Email:</label>
+  <input type="email" name="email" id="email" required><br>
+  <label>Password:</label>
+  <input type="password" name="password"  id="password" required><br>
+  <label>Role:</label>
+  <input type="text" name="role" id="role" required><br>
+  <p id="message"></p>
+  <button type="submit">Register</button>
+</form>
+<script >
+  document.getElementById("form-container").addEventListener("submit", async function (event) {
+     event.preventDefault(); // Prevents form from reloading the page
+
+     // Get input values
+     const userName = document.getElementById("username").value;
+     const role = document.getElementById("role").value;
+     const email = document.getElementById("email").value;
+     const password = document.getElementById("password").value;
+
+     try {
+         const response = await fetch("http://localhost:8080/api/register", {
+             method: "POST",
+             headers: {
+                 "Content-Type": "application/json"
+             },
+             body: JSON.stringify({userName,role,email,password }),
+             mode: "cors" // Fixed placemen
+         });
+
+         if (!response.ok) {
+             throw new Error(`HTTP error! Status: ${response.status}`);
+         }
+
+         const result = await response.json(); // Fixed JSON parsing
+         console.log(result)
+         document.getElementById("message").textContent = result.message || "User registered successfully!";
+     } catch (error) {
+<!--         console.error("Error:", error);-->
+         document.getElementById("message").textContent = "Failed to register. Please try again.";
+     }
+ });
+
+</script>
+</body>
+</html>

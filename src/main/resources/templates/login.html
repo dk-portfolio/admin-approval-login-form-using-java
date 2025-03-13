@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 100%;
+        }
+        p{
+        color= red
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 10px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<form >
+    <h2>User Login</h2>
+  <label>Username:</label>
+  <input type="text" name="username" id="username" required><br>
+  <label>Password:</label>
+  <input type="password" name="password"  id="password" required><br>
+    <p id="message"></p>
+  <button type="submit" onclick="login()">Login</button>
+</form>
+<script>
+    async function login() {
+let userName = document.getElementById("username").value;
+let password = document.getElementById("password").value;
+    console.log(userName,password)
+
+const response = await fetch("http://localhost:8080/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username,password }),
+    mode: "cors" // Fixed placemen
+});
+
+const result = await response.text();
+document.getElementById("message").textContent = result.message || "Login successfull";
+}
+</script>
+</body>
+</html>
